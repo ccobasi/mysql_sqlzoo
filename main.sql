@@ -135,3 +135,48 @@ WHEN subject IN ('Physics', 'Chemistry') THEN 1
 ELSE 0
 END,
 subject, winner;
+
+--nested queries
+
+SELECT name FROM world
+WHERE population >
+(SELECT population FROM world
+WHERE name='Russia');
+
+SELECT name
+FROM world
+WHERE continent = 'Europe' AND GDP/population > 
+(SELECT GDP/population 
+FROM world
+WHERE name = 'United Kingdom');
+
+SELECT name, continent
+FROM world
+WHERE continent = 'South America' OR continent = 'Oceania'
+ORDER BY name;
+
+SELECT name, population
+FROM world
+WHERE population > 
+(SELECT population
+FROM world
+WHERE name = 'Canada') AND population < 
+(SELECT population
+FROM world
+WHERE name = 'Poland');
+
+SELECT name, 
+CONCAT(ROUND(population/(SELECT population
+ROM world
+WHERE name = 'Germany')*100, 0), '%')AS percentage
+FROM world
+WHERE continent = 'Europe';
+
+SELECT name
+FROM world
+WHERE gdp >
+ALL(SELECT gdp
+FROM world
+WHERE continent = 'Europe' AND GDP > 0);
+
+
