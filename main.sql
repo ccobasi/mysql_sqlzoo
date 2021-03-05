@@ -264,3 +264,116 @@ SELECT matchid, mdate, COUNT(player)
 FROM game JOIN goal ON (game.id = goal.matchid)
 WHERE teamid = 'GER'
 GROUP BY matchid, mdate;
+
+-- more join
+SELECT id, title
+ FROM movie
+ WHERE yr=1962;
+
+SELECT yr
+FROM movie
+WHERE title = 'Citizen Kane';
+
+SELECT id, title, yr
+FROM movie
+WHERE title LIKE 'Star Trek%'
+ORDER BY yr;
+
+SELECT id 
+FROM actor
+WHERE name = 'Glenn Close';
+
+SELECT id 
+FROM movie
+WHERE title = 'Casablanca';
+
+SELECT name
+FROM actor JOIN casting ON (actor.id = casting.actorid)
+WHERE movieid=27;
+
+SELECT name
+FROM actor JOIN casting ON (actor.id = casting.actorid)
+WHERE movieid=
+(SELECT id 
+FROM movie 
+WHERE title = 'Alien');
+
+SELECT title
+FROM movie JOIN casting ON (movie.id = casting.movieid)
+WHERE actorid = 
+(SELECT id
+FROM actor
+WHERE name = 'Harrison Ford');
+
+SELECT title 
+FROM movie JOIN casting ON (movie.id = casting.movieid)
+WHERE ord != 1 AND actorid =
+(SELECT id
+FROM actor
+WHERE name = 'Harrison Ford');
+
+SELECT title, name
+FROM movie JOIN casting ON (movie.id = casting.movieid)
+JOIN actor ON (casting.actorid = actor.id)
+WHERE yr = 1962 AND ord = 1;
+
+SELECT yr,COUNT(title) FROM
+movie JOIN casting ON movie.id=movieid
+        JOIN actor   ON actorid=actor.id
+WHERE name='Rock Hudson'
+GROUP BY yr
+HAVING COUNT(title) > 1;
+
+SELECT name
+FROM actor JOIN casting ON (actor.id = casting.actorid)
+WHERE ord = 1 
+GROUP BY name
+HAVING COUNT(ord) >= 15
+ORDER BY name;
+
+-- NULL
+SELECT name 
+FROM teacher
+WHERE dept IS NULL;
+
+SELECT teacher.name, dept.name
+FROM teacher INNER JOIN dept
+ON (teacher.dept=dept.id);
+
+SELECT teacher.name, dept.name
+FROM teacher LEFT JOIN dept
+ON (teacher.dept=dept.id);
+
+SELECT teacher.name, dept.name
+FROM teacher RIGHT JOIN dept
+ON (teacher.dept=dept.id);
+
+SELECT teacher.name, COALESCE(mobile, '07986 444 2266')
+FROM teacher;
+
+SELECT teacher.name, COALESCE(dept.name, 'None')
+FROM teacher LEFT JOIN dept ON (teacher.dept = dept.id);
+
+SELECT COUNT(teacher.name), COUNT(mobile)
+FROM teacher;
+
+SELECT dept.name, COUNT(teacher.name) 
+FROM teacher RIGHT JOIN dept ON (teacher.dept = dept.id)
+GROUP BY dept.name;
+
+SELECT teacher.name,
+CASE
+WHEN teacher.dept = 1 THEN 'Sci'
+WHEN teacher.dept = 2 THEN 'Sci'
+ELSE 'Art'
+END
+FROM teacher;
+
+SELECT teacher.name,
+CASE
+WHEN teacher.dept = 1 THEN 'Sci'
+WHEN teacher.dept =2 THEN 'Sci'
+WHEN teacher.dept = 3 THEN 'Art'
+ELSE 'None'
+END
+FROM teacher;
